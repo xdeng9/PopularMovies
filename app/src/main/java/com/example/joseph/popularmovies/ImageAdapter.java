@@ -14,21 +14,21 @@ import com.squareup.picasso.Picasso;
 public class ImageAdapter extends BaseAdapter{
 
     private Context context;
-    private String[] posterUrl;
+    private Movie[] movies;
 
-    public ImageAdapter(Context context, String[] posterUrl){
+    public ImageAdapter(Context context, Movie[] movies){
         this.context = context;
-        this.posterUrl = posterUrl;
+        this.movies = movies;
     }
 
     @Override
     public int getCount() {
-        return posterUrl.length;
+        return movies.length;
     }
 
     @Override
     public Object getItem(int position) {
-        return posterUrl[position];
+        return movies[position];
     }
 
     @Override
@@ -43,13 +43,12 @@ public class ImageAdapter extends BaseAdapter{
 
         if(convertView == null){
             imageView = new ImageView(context);
-            imageView.setPadding(5,5,5,5);
         } else {
             imageView = (ImageView) convertView;
         }
 
         Picasso.with(context)
-                .load(posterUrl[position])
+                .load(movies[position].getImageUrl())
                 .into(imageView);
 
         return imageView;
