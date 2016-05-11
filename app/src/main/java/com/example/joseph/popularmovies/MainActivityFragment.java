@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -30,17 +31,28 @@ public class MainActivityFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        String imageUrl = "http://media.comicbook.com/2016/05/captain-america-civil-war-181827.jpg";
+        String[] imageUrls = {
+                "http://media.comicbook.com/2016/05/captain-america-civil-war-181827.jpg",
+                "http://media.comicbook.com/2016/05/captain-america-civil-war-181827.jpg",
+                "http://media.comicbook.com/2016/05/captain-america-civil-war-181827.jpg",
+                "http://media.comicbook.com/2016/05/captain-america-civil-war-181827.jpg",
+                "http://media.comicbook.com/2016/05/captain-america-civil-war-181827.jpg",
+                "http://media.comicbook.com/2016/05/captain-america-civil-war-181827.jpg",
+                "http://media.comicbook.com/2016/05/captain-america-civil-war-181827.jpg"
+        };
 
-        ImageView imageView = (ImageView)rootView.findViewById(R.id.movie_image);
-
-        Picasso.with(imageView.getContext())
-                .load(imageUrl)
-                .into(imageView);
+        GridView gridView = (GridView) rootView.findViewById(R.id.gridview);
+        gridView.setAdapter(new ImageAdapter(getContext(), imageUrls));
 
         FetchMovieTask movieTask = new FetchMovieTask();
         movieTask.execute();

@@ -6,12 +6,17 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.joseph.popularmovies.MainActivityFragment"
-    tools:showIn="@layout/activity_main">
+    tools:context="com.example.joseph.popularmovies.MainActivityFragment">
 
-    <ImageView
+    <GridView
+        android:id="@+id/gridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/movie_image"/>
-
+        android:columnWidth="90dp"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="10dp"
+        android:gravity="center"
+        android:numColumns="2"
+        android:stretchMode="columnWidth">
+    </GridView>
 </RelativeLayout>
