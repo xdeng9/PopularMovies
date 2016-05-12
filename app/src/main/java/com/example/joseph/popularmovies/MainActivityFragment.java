@@ -52,7 +52,7 @@ public class MainActivityFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         FetchMovieTask movieTask = new FetchMovieTask();
-        movieTask.execute();
+        movieTask.execute("");
         gridView = (GridView) rootView.findViewById(R.id.gridview);
 
         return rootView;
@@ -76,6 +76,7 @@ public class MainActivityFragment extends Fragment {
 
             //This string will contain the raw Json data
             String movieJsonStr = null;
+            String sortMovieBy = params[0];
             String api_key = "651b1c41da70293dcec9902d43fc47dc";
 
             try {
