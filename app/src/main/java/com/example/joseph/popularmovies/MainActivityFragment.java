@@ -1,7 +1,9 @@
 package com.example.joseph.popularmovies;
 
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -51,8 +53,6 @@ public class MainActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        FetchMovieTask movieTask = new FetchMovieTask();
-        movieTask.execute("");
         gridView = (GridView) rootView.findViewById(R.id.gridview);
 
         return rootView;
@@ -76,15 +76,22 @@ public class MainActivityFragment extends Fragment {
 
             //This string will contain the raw Json data
             String movieJsonStr = null;
-            String sortMovieBy = params[0];
             String api_key = "651b1c41da70293dcec9902d43fc47dc";
 
             try {
                 final String POPULAR_MOVIE_BASE_URL = "http://api.themoviedb.org/3/movie/popular?";
                 final String TOP_MOVIE_BASE_URL = "http://api.themoviedb.org/3/movie/top_rated?";
                 final String API_KEY_PARAM = "api_key";
+                String movieUrl = POPULAR_MOVIE_BASE_URL;
 
-                Uri builturi = Uri.parse(POPULAR_MOVIE_BASE_URL).buildUpon()
+                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                String sort = pref.getString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_default));
+
+                if(sort.equals("top")){
+                    movieUrl = TOP_MOVIE_BASE_URL;
+                }
+
+                Uri builturi = Uri.parse(movieUrl).buildUpon()
                         .appendQueryParameter(API_KEY_PARAM, api_key).build();
 
                 URL url = new URL(builturi.toString());
