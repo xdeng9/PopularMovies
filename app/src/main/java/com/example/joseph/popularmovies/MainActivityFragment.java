@@ -114,10 +114,10 @@ public class MainActivityFragment extends Fragment {
                     buffer.append(line + "\n");
                 }
 
-                if (buffer.length() == 0)
+                if (buffer.length() == 0) {
                     return null;
+                }
                 movieJsonStr = buffer.toString();
-                Log.v(LOG_TAG, "Parsed movie string: "+movieJsonStr);
 
             }catch (IOException e){
                 Log.e(LOG_TAG, "Error ", e);
@@ -175,8 +175,6 @@ public class MainActivityFragment extends Fragment {
 
                 movieInfo = new Movie(originalTitle,imageUrl,plotSummary,userRating,releaseDate);
                 movies[i] = movieInfo;
-                Log.v(LOG_TAG,"You are watching "+movieInfo.getMovieTitle()+" Poster url is"
-                        +movieInfo.getImageUrl()+"\n");
             }
 
             return movies;
@@ -200,7 +198,6 @@ public class MainActivityFragment extends Fragment {
                 partialUrl = movieResult[i].getImageUrl();
                 movieResult[i].setImageUrl(POSTER_BASE_URL+POSTER_SIZE+partialUrl);
             }
-
             return movieResult;
         }
 
