@@ -1,5 +1,6 @@
 package com.example.joseph.popularmovies;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 
@@ -31,19 +33,19 @@ import java.net.URL;
  */
 public class MainActivityFragment extends Fragment {
 
-    Movie []movieResult;
+    Movie[] movieResult;
     GridView gridView;
 
     public MainActivityFragment() {
     }
 
-   private void updateMovie(){
-       FetchMovieTask movieTask = new FetchMovieTask();
-       movieTask.execute();
-   }
+    private void updateMovie() {
+        FetchMovieTask movieTask = new FetchMovieTask();
+        movieTask.execute();
+    }
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
@@ -55,21 +57,28 @@ public class MainActivityFragment extends Fragment {
 
         gridView = (GridView) rootView.findViewById(R.id.gridview);
 
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                startActivity(intent);
+            }
+        });
         return rootView;
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
         updateMovie();
     }
 
-    public class FetchMovieTask extends AsyncTask<String,Void,Movie[]> {
+    public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
 
         private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
         @Override
-        protected Movie[] doInBackground(String...params){
+        protected Movie[] doInBackground(String... params) {
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
@@ -87,7 +96,7 @@ public class MainActivityFragment extends Fragment {
                 SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 String sort = pref.getString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_default));
 
-                if(sort.equals("top")){
+                if (sort.equals("top")) {
                     movieUrl = TOP_MOVIE_BASE_URL;
                 }
 
@@ -96,7 +105,7 @@ public class MainActivityFragment extends Fragment {
 
                 URL url = new URL(builturi.toString());
 
-                Log.v(LOG_TAG, "Built URI "+ builturi.toString());
+                Log.v(LOG_TAG, "Built URI " + builturi.toString());
 
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
@@ -110,7 +119,7 @@ public class MainActivityFragment extends Fragment {
                 reader = new BufferedReader(new InputStreamReader(inputStream));
 
                 String line;
-                while((line = reader.readLine()) != null){
+                while ((line = reader.readLine()) != null) {
                     buffer.append(line + "\n");
                 }
 
@@ -119,24 +128,24 @@ public class MainActivityFragment extends Fragment {
                 }
                 movieJsonStr = buffer.toString();
 
-            }catch (IOException e){
+            } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
-                        return null;
-            }finally {
-                if (urlConnection !=null)
+                return null;
+            } finally {
+                if (urlConnection != null)
                     urlConnection.disconnect();
-                if(reader != null){
+                if (reader != null) {
                     try {
                         reader.close();
-                    }catch (final IOException e){
+                    } catch (final IOException e) {
                         Log.e(LOG_TAG, "Error closing stream: ", e);
                     }
                 }
             }
 
-            try{
+            try {
                 return getMovieDataFromJson(movieJsonStr);
-            }catch(JSONException e){
+            } catch (JSONException e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
                 e.printStackTrace();
             }
@@ -145,23 +154,23 @@ public class MainActivityFragment extends Fragment {
         }
 
         //Parse Json to useful data
-        private Movie[] getMovieDataFromJson(String JsonStr) throws JSONException{
+        private Movie[] getMovieDataFromJson(String JsonStr) throws JSONException {
 
             final String MDB_RESULTS = "results";
             final String MDB_POSTER = "poster_path";
             final String MDB_OVERVIEW = "overview";
             final String MDB_RELEASE_DATE = "release_date";
             final String MDB_TITLE = "original_title";
-            final String MDB_RATING= "vote_average";
+            final String MDB_RATING = "vote_average";
 
             JSONObject movieJson = new JSONObject(JsonStr);
             JSONArray movieArray = movieJson.getJSONArray((MDB_RESULTS));
 
-            Movie []movies = new Movie[movieArray.length()];
+            Movie[] movies = new Movie[movieArray.length()];
 
-            for(int i=0; i<movieArray.length(); i++){
+            for (int i = 0; i < movieArray.length(); i++) {
                 Movie movieInfo;
-                String  originalTitle;
+                String originalTitle;
                 String imageUrl;
                 String plotSummary;
                 String userRating;
@@ -173,7 +182,7 @@ public class MainActivityFragment extends Fragment {
                 userRating = movieArray.getJSONObject(i).getString(MDB_RATING);
                 releaseDate = movieArray.getJSONObject(i).getString(MDB_RELEASE_DATE);
 
-                movieInfo = new Movie(originalTitle,imageUrl,plotSummary,userRating,releaseDate);
+                movieInfo = new Movie(originalTitle, imageUrl, plotSummary, userRating, releaseDate);
                 movies[i] = movieInfo;
             }
 
@@ -181,22 +190,22 @@ public class MainActivityFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(Movie[] result){
-            if(result != null) {
+        protected void onPostExecute(Movie[] result) {
+            if (result != null) {
                 movieResult = result;
                 movieResult = buildPosterUrl(movieResult);
                 gridView.setAdapter(new ImageAdapter(getActivity(), movieResult));
             }
         }
 
-        private Movie[] buildPosterUrl(Movie[] movieResult){
+        private Movie[] buildPosterUrl(Movie[] movieResult) {
             final String POSTER_BASE_URL = "http://image.tmdb.org/t/p/";
             final String POSTER_SIZE = "w185";
 
-            for(int i=0; i< movieResult.length; i++){
+            for (int i = 0; i < movieResult.length; i++) {
                 String partialUrl;
                 partialUrl = movieResult[i].getImageUrl();
-                movieResult[i].setImageUrl(POSTER_BASE_URL+POSTER_SIZE+partialUrl);
+                movieResult[i].setImageUrl(POSTER_BASE_URL + POSTER_SIZE + partialUrl);
             }
             return movieResult;
         }
