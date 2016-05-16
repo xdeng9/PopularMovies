@@ -35,6 +35,7 @@ public class MainActivityFragment extends Fragment {
 
     Movie[] movieResult;
     GridView gridView;
+    ImageAdapter mImageAdapter;
 
     public MainActivityFragment() {
     }
@@ -60,7 +61,9 @@ public class MainActivityFragment extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                Movie movieItem = (Movie) mImageAdapter.getItem(position);
                 Intent intent = new Intent(getActivity(), DetailActivity.class);
+                intent.putExtra(Intent.EXTRA_TEXT,movieItem.getPlotSummary());
                 startActivity(intent);
             }
         });
@@ -192,7 +195,8 @@ public class MainActivityFragment extends Fragment {
             if (result != null) {
                 movieResult = result;
                 movieResult = buildPosterUrl(movieResult);
-                gridView.setAdapter(new ImageAdapter(getActivity(), movieResult));
+                mImageAdapter = new ImageAdapter(getActivity(), movieResult);
+                gridView.setAdapter(mImageAdapter);
             }
         }
 

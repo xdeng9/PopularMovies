@@ -1,6 +1,7 @@
 package com.example.joseph.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,6 +12,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -21,6 +23,11 @@ public class DetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Intent intent = getIntent();
+        String message = intent.getStringExtra(intent.EXTRA_TEXT);
+        ((TextView) findViewById(R.id.movie_plot_summary_textview)).setText(message);
+
     }
+
     
 }

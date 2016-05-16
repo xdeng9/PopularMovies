@@ -18,9 +18,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:text="Movie name"
         android:gravity="center_vertical"
-        android:textSize="32dp"/>
+        android:text="Movie name"
+        android:textSize="32dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,20 +32,35 @@
             android:id="@+id/movie_poster_imageview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/poster_placeholder"/>
+            android:src="@drawable/poster_placeholder" />
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:textSize="18dp"
-            android:text="Year released"/>
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/movie_release_date_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="Year released"
+                android:textSize="18dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Movie rating goes here"
+                android:layout_margin="16dp"/>
+
+        </LinearLayout>
     </LinearLayout>
 
     <TextView
+        android:id="@+id/movie_plot_summary_textview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:text="plot summary goes here"/>
+        android:text="plot summary goes here" />
 
 </LinearLayout>
