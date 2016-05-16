@@ -36,6 +36,7 @@ public class MainActivityFragment extends Fragment {
     Movie[] movieResult;
     GridView gridView;
     ImageAdapter mImageAdapter;
+    final String MOVIE_PARCEL_KEY = "movie";
 
     public MainActivityFragment() {
     }
@@ -63,7 +64,8 @@ public class MainActivityFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Movie movieItem = (Movie) mImageAdapter.getItem(position);
                 Intent intent = new Intent(getActivity(), DetailActivity.class);
-                intent.putExtra(Intent.EXTRA_TEXT,movieItem.getPlotSummary());
+               // intent.putExtra(Intent.EXTRA_TEXT,movieItem.getUserRating());
+                intent.putExtra(MOVIE_PARCEL_KEY,movieItem);
                 startActivity(intent);
             }
         });

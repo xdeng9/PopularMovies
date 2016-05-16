@@ -12,10 +12,14 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 public class DetailActivity extends AppCompatActivity {
 
+    Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,9 +28,13 @@ public class DetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
-        String message = intent.getStringExtra(intent.EXTRA_TEXT);
-        ((TextView) findViewById(R.id.movie_plot_summary_textview)).setText(message);
-
+        Movie movie = intent.getExtras().getParcelable("movie");
+        ((TextView) findViewById(R.id.movie_name_textview)).setText(movie.getMovieTitle());
+        ((TextView) findViewById(R.id.movie_rating_textview)).setText(movie.getUserRating());
+        ((TextView) findViewById(R.id.movie_release_date_textview)).setText(movie.getReleaseDate());
+        ((TextView) findViewById(R.id.movie_plot_summary_textview)).setText(movie.getPlotSummary());
+        ImageView movieImage = ((ImageView) findViewById(R.id.movie_poster_imageview));
+        Picasso.with(context).load(movie.getImageUrl()).into(movieImage);
     }
 
     
