@@ -90,7 +90,7 @@ public class MainActivityFragment extends Fragment {
 
             //This string will contain the raw Json data
             String movieJsonStr = null;
-            String api_key = "651b1c41da70293dcec9902d43fc47dc";
+            String api_key = "";
 
             try {
                 final String POPULAR_MOVIE_BASE_URL = "http://api.themoviedb.org/3/movie/popular?";
