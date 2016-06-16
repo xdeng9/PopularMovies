@@ -10,7 +10,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.joseph.popularmovies.DetailActivity"
     tools:showIn="@layout/activity_detail">
-    
+
     <TextView
         android:id="@+id/movie_name_textview"
         android:layout_width="match_parent"

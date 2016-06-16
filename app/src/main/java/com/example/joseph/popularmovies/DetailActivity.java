@@ -20,6 +20,7 @@ import com.squareup.picasso.Picasso;
 public class DetailActivity extends AppCompatActivity {
 
     Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,5 +38,5 @@ public class DetailActivity extends AppCompatActivity {
         Picasso.with(context).load(movie.getImageUrl()).into(movieImage);
     }
 
-    
+
 }
