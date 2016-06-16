@@ -33,6 +33,7 @@ public class DetailActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.movie_rating_textview)).setText(movie.getUserRating());
         ((TextView) findViewById(R.id.movie_release_date_textview)).setText(movie.getReleaseDate());
         ((TextView) findViewById(R.id.movie_plot_summary_textview)).setText(movie.getPlotSummary());
+        setTitle(movie.getMovieTitle());
         ImageView movieImage = ((ImageView) findViewById(R.id.movie_poster_imageview));
         Picasso.with(context).load(movie.getImageUrl()).into(movieImage);
     }
