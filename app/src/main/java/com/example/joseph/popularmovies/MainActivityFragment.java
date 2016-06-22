@@ -159,6 +159,7 @@ public class MainActivityFragment extends Fragment {
         //Parse Json to useful data
         private Movie[] getMovieDataFromJson(String JsonStr) throws JSONException {
 
+            final String MDB_ID = "id";
             final String MDB_RESULTS = "results";
             final String MDB_POSTER = "poster_path";
             final String MDB_OVERVIEW = "overview";
@@ -178,15 +179,18 @@ public class MainActivityFragment extends Fragment {
                 String plotSummary;
                 String userRating;
                 String releaseDate;
+                int movieId;
 
+                movieId = movieArray.getJSONObject(i).getInt(MDB_ID);
                 originalTitle = movieArray.getJSONObject(i).getString(MDB_TITLE);
                 imageUrl = movieArray.getJSONObject(i).getString(MDB_POSTER);
                 plotSummary = movieArray.getJSONObject(i).getString(MDB_OVERVIEW);
                 userRating = movieArray.getJSONObject(i).getString(MDB_RATING);
                 releaseDate = movieArray.getJSONObject(i).getString(MDB_RELEASE_DATE);
 
-                movieInfo = new Movie(originalTitle, imageUrl, plotSummary, userRating, releaseDate);
+                movieInfo = new Movie(movieId, originalTitle, imageUrl, plotSummary, userRating, releaseDate);
                 movies[i] = movieInfo;
+
             }
 
             return movies;
