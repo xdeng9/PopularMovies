@@ -33,7 +33,6 @@ import java.net.URL;
  */
 public class MainActivityFragment extends Fragment {
 
-    Movie[] movieResult;
     GridView gridView;
     ImageAdapter mImageAdapter;
     final String MOVIE_PARCEL_KEY = "movie";
@@ -90,7 +89,6 @@ public class MainActivityFragment extends Fragment {
 
             //This string will contain the raw Json data
             String movieJsonStr = null;
-            String api_key = "651b1c41da70293dcec9902d43fc47dc";
 
             try {
                 final String POPULAR_MOVIE_BASE_URL = "http://api.themoviedb.org/3/movie/popular?";
@@ -106,7 +104,7 @@ public class MainActivityFragment extends Fragment {
                 }
 
                 Uri builturi = Uri.parse(movieUrl).buildUpon()
-                        .appendQueryParameter(API_KEY_PARAM, api_key).build();
+                        .appendQueryParameter(API_KEY_PARAM, BuildConfig.API_KEY).build();
 
                 URL url = new URL(builturi.toString());
 
@@ -166,6 +164,7 @@ public class MainActivityFragment extends Fragment {
             final String MDB_RELEASE_DATE = "release_date";
             final String MDB_TITLE = "original_title";
             final String MDB_RATING = "vote_average";
+            final String MDB_BACKDROP="backdrop_path";
 
             JSONObject movieJson = new JSONObject(JsonStr);
             JSONArray movieArray = movieJson.getJSONArray((MDB_RESULTS));
@@ -180,6 +179,7 @@ public class MainActivityFragment extends Fragment {
                 String userRating;
                 String releaseDate;
                 int movieId;
+                String backdrop;
 
                 movieId = movieArray.getJSONObject(i).getInt(MDB_ID);
                 originalTitle = movieArray.getJSONObject(i).getString(MDB_TITLE);
@@ -187,8 +187,10 @@ public class MainActivityFragment extends Fragment {
                 plotSummary = movieArray.getJSONObject(i).getString(MDB_OVERVIEW);
                 userRating = movieArray.getJSONObject(i).getString(MDB_RATING);
                 releaseDate = movieArray.getJSONObject(i).getString(MDB_RELEASE_DATE);
+                backdrop = movieArray.getJSONObject(i).getString(MDB_BACKDROP);
 
-                movieInfo = new Movie(movieId, originalTitle, imageUrl, plotSummary, userRating, releaseDate);
+                movieInfo = new Movie(movieId, originalTitle, Utility.formateImageUrl(imageUrl),
+                        plotSummary, userRating, releaseDate, Utility.formatBackdropPath(backdrop));
                 movies[i] = movieInfo;
 
             }
@@ -199,23 +201,9 @@ public class MainActivityFragment extends Fragment {
         @Override
         protected void onPostExecute(Movie[] result) {
             if (result != null) {
-                movieResult = result;
-                movieResult = buildPosterUrl(movieResult);
-                mImageAdapter = new ImageAdapter(getActivity(), movieResult);
+                mImageAdapter = new ImageAdapter(getActivity(), result);
                 gridView.setAdapter(mImageAdapter);
             }
-        }
-
-        private Movie[] buildPosterUrl(Movie[] movieResult) {
-            final String POSTER_BASE_URL = "http://image.tmdb.org/t/p/";
-            final String POSTER_SIZE = "w185";
-
-            for (int i = 0; i < movieResult.length; i++) {
-                String partialUrl;
-                partialUrl = movieResult[i].getImageUrl();
-                movieResult[i].setImageUrl(POSTER_BASE_URL + POSTER_SIZE + partialUrl);
-            }
-            return movieResult;
         }
 
     }

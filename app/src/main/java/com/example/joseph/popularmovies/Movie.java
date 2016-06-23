@@ -14,14 +14,17 @@ public class Movie implements Parcelable{
     private String plotSummary;
     private String userRating;
     private String releaseDate;
+    private String backdrop;
 
-    public Movie(int id, String originalTitle, String imageUrl, String plotSummary, String userRating, String releaseDate){
+    public Movie(int id, String originalTitle, String imageUrl, String plotSummary,
+                 String userRating, String releaseDate, String backdrop){
         this.id = id;
         this.originalTitle = originalTitle;
         this.imageUrl = imageUrl;
         this.plotSummary = plotSummary;
         this.userRating = userRating;
         this.releaseDate = releaseDate;
+        this.backdrop = backdrop;
     }
 
     public int getMovieId(){
@@ -49,9 +52,14 @@ public class Movie implements Parcelable{
         return releaseDate;
     }
 
+    public String getBackdrop() {
+        return backdrop;
+    }
+
     public void setImageUrl(String url){
         imageUrl = url;
     }
+
 
     private String roundUserRating(String rating){
         double result = Double.parseDouble(rating);
@@ -75,6 +83,7 @@ public class Movie implements Parcelable{
         dest.writeString(plotSummary);
         dest.writeString(userRating);
         dest.writeString(releaseDate);
+        dest.writeString(backdrop);
     }
 
     private Movie(Parcel in){
@@ -85,6 +94,7 @@ public class Movie implements Parcelable{
         plotSummary = in.readString();
         userRating = in.readString();
         releaseDate = in.readString();
+        backdrop = in.readString();
     }
 
     public static final Parcelable.Creator<Movie> CREATOR =

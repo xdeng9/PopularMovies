@@ -4,10 +4,12 @@
     <string-array name="sortentries">
         <item>Most popular</item>
         <item>Highest rated</item>
+        <item>My favorite</item>
     </string-array>
     <string-array name="sortvalues">
         <item>popular</item>
         <item>top</item>
+        <item>favorite</item>
     </string-array>
 
     <string-array name="movies_array">

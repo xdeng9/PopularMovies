@@ -1,13 +1,10 @@
 package com.example.joseph.popularmovies;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -20,37 +17,34 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
 
 /**
- * Created by administrator on 6/18/16.
+ * Created by administrator on 6/21/16.
  */
-public class FetchMovieTrailerTask extends AsyncTask<Integer, Void, Trailer[]> {
+public class FetchMovieReviewTask extends AsyncTask<Integer, Void, Review[]> {
 
-    private final String LOG_TAG = FetchMovieTrailerTask.class.getSimpleName();
+    private final String LOG_TAG = FetchMovieReviewTask.class.getSimpleName();
     private int mId;
     private Context mContext;
-    TrailerAdapter mTrailerAdapter;
-    LinearLayout mTrailerLayout;
+    LinearLayout mReviewLayout;
 
-    public FetchMovieTrailerTask(Context context, LinearLayout linearLayout) {
+    public FetchMovieReviewTask(Context context, LinearLayout linearLayout) {
 
         this.mContext = context;
-        this.mTrailerLayout = linearLayout;
+        this.mReviewLayout = linearLayout;
     }
 
     @Override
-    protected Trailer[] doInBackground(Integer... params) {
+    protected Review[] doInBackground(Integer... params) {
 
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
-        //This string will contain the raw Json data
-        String trailerJsonStr = null;
+        String reviewJsonStr = null;
         mId = params[0];
 
         try {
-            final String TRAILER_URL = "http://api.themoviedb.org/3/movie/" + mId + "/videos";
+            final String TRAILER_URL = "http://api.themoviedb.org/3/movie/" + mId + "/reviews";
             final String API_KEY_PARAM = "api_key";
 
             Uri builturi = Uri.parse(TRAILER_URL).buildUpon()
@@ -78,7 +72,7 @@ public class FetchMovieTrailerTask extends AsyncTask<Integer, Void, Trailer[]> {
             if (buffer.length() == 0) {
                 return null;
             }
-            trailerJsonStr = buffer.toString();
+            reviewJsonStr = buffer.toString();
 
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
@@ -96,7 +90,7 @@ public class FetchMovieTrailerTask extends AsyncTask<Integer, Void, Trailer[]> {
         }
 
         try {
-            return getTrailerDataFromJson(trailerJsonStr);
+            return getReviewDataFromJson(reviewJsonStr);
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
@@ -105,43 +99,44 @@ public class FetchMovieTrailerTask extends AsyncTask<Integer, Void, Trailer[]> {
         return null;
     }
 
-    private Trailer[] getTrailerDataFromJson(String JsonStr) throws JSONException {
+    private Review[] getReviewDataFromJson(String JsonStr) throws JSONException {
 
-        final String MDB_KEY = "key";
-        final String MDB_NAME = "name";
+        final String MDB_AUTHOR = "author";
+        final String MDB_CONTENT = "content";
         final String MDB_RESULTS = "results";
 
-        JSONObject trailerJson = new JSONObject(JsonStr);
-        JSONArray trailerArray = trailerJson.getJSONArray((MDB_RESULTS));
+        JSONObject reviewJson = new JSONObject(JsonStr);
+        JSONArray reviewArray = reviewJson.getJSONArray((MDB_RESULTS));
 
-        Trailer[] trailers = new Trailer[trailerArray.length()];
+        Review[] reviews = new Review[reviewArray.length()];
 
-        for (int i = 0; i < trailerArray.length(); i++) {
-            Trailer trailerInfo;
-            String trailerUrl;
-            String trailerName;
+        for (int i = 0; i < reviewArray.length(); i++) {
+            Review reviewInfo;
+            String author;
+            String content;
 
-            trailerUrl = trailerArray.getJSONObject(i).getString(MDB_KEY);
-            trailerName = trailerArray.getJSONObject(i).getString(MDB_NAME);
+            author = reviewArray.getJSONObject(i).getString(MDB_AUTHOR);
+            content = reviewArray.getJSONObject(i).getString(MDB_CONTENT);
 
-            trailerInfo = new Trailer(trailerName, trailerUrl);
-            trailers[i] = trailerInfo;
+            reviewInfo = new Review(author, content);
+            reviews[i] = reviewInfo;
 
         }
 
-        return trailers;
+        return reviews;
     }
 
     @Override
-    protected void onPostExecute(Trailer[] result) {
+    protected void onPostExecute(Review[] result) {
 
         if (result != null) {
-            mTrailerAdapter = new TrailerAdapter(mContext, result);
-            for (int i = 0; i < mTrailerAdapter.getCount(); i++) {
-                mTrailerLayout.addView(mTrailerAdapter.getView(i,null,null));
+           // mTrailerAdapter = new TrailerAdapter(mContext, result);
+            for (int i = 0; i < result.length; i++) {
+           //     mTrailerLayout.addView(mTrailerAdapter.getView(i,null,null));
+                TextView tv = new TextView(mContext);
+                tv.setText(result[i].getAuthor()+"\n"+result[i].getReview()+"\n\n");
+                mReviewLayout.addView(tv);
             }
         }
     }
-
-
 }

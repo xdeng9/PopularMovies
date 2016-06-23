@@ -14,14 +14,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 public class DetailActivity extends AppCompatActivity {
 
-    Context context;
+    Context mContext;
     int mId;
+    LinearLayout trailerLayout;
+    LinearLayout reviewLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,16 +37,40 @@ public class DetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Movie movie = intent.getExtras().getParcelable("movie");
-        mId =movie.getMovieId();
-        Log.i("Movie id: ", ""+mId);
-        ((TextView) findViewById(R.id.movie_name_textview)).setText(movie.getMovieTitle());
+
+        trailerLayout = (LinearLayout) findViewById(R.id.trailers_layout);
+        reviewLayout = (LinearLayout) findViewById(R.id.reviews_layout);
+
+        mId = movie.getMovieId();
+        ImageView backdrop = (ImageView) findViewById(R.id.backdrop_imageview);
+        Picasso.with(mContext).load(movie.getBackdrop()).into(backdrop);
+        ((TextView) findViewById(R.id.movie_title_textview)).setText(movie.getMovieTitle());
         ((TextView) findViewById(R.id.movie_rating_textview)).setText(movie.getUserRating());
         ((TextView) findViewById(R.id.movie_release_date_textview)).setText(movie.getReleaseDate());
         ((TextView) findViewById(R.id.movie_plot_summary_textview)).setText(movie.getPlotSummary());
         setTitle(movie.getMovieTitle());
         ImageView movieImage = ((ImageView) findViewById(R.id.movie_poster_imageview));
-        Picasso.with(context).load(movie.getImageUrl()).into(movieImage);
+        Picasso.with(mContext).load(movie.getImageUrl()).into(movieImage);
+        //listView = (ListView) findViewById(R.id.trailer_listView);
+        //Log.i("Post execute:", "Trailers size = " + mTrailerAdapter.getCount());
+        //listView.setAdapter(mTrailerAdapter);
+        getTrailers();
+        getReviews();
     }
 
-    
+    private void getTrailers() {
+        FetchMovieTrailerTask trailerTask = new FetchMovieTrailerTask(getApplicationContext(), trailerLayout);
+        trailerTask.execute(mId);
+    }
+
+    private void getReviews() {
+        FetchMovieReviewTask reviewTask = new FetchMovieReviewTask(getApplicationContext(), reviewLayout);
+        reviewTask.execute(mId);
+
+    }
+
+    public void addMovieToFavorite() {
+        Toast.makeText(getApplicationContext(), "Movie added to favorite!", Toast.LENGTH_SHORT).show();
+    }
+
 }
