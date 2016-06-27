@@ -12,9 +12,4 @@
         <item>favorite</item>
     </string-array>
 
-    <string-array name="movies_array">
-        <item>Popular</item>
-        <item>Top rated</item>
-        <item>Favorites</item>
-    </string-array>
 </resources>

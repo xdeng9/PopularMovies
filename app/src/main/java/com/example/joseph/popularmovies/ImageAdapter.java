@@ -1,6 +1,7 @@
 package com.example.joseph.popularmovies;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -8,22 +9,28 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.Arrays;
+
 /**
  * Created by administrator on 5/9/16.
  */
-public class ImageAdapter extends BaseAdapter{
+public class ImageAdapter extends BaseAdapter {
 
     private Context context;
     private Movie[] movies;
 
-    public ImageAdapter(Context context, Movie[] movies){
+    public ImageAdapter(Context context) {
         this.context = context;
-        this.movies = movies;
     }
 
     @Override
     public int getCount() {
-        return movies.length;
+        if (movies == null) {
+            return 0;
+        } else {
+            return movies.length;
+        }
+
     }
 
     @Override
@@ -41,7 +48,7 @@ public class ImageAdapter extends BaseAdapter{
 
         ImageView imageView;
 
-        if(convertView == null){
+        if (convertView == null) {
             imageView = new ImageView(context);
         } else {
             imageView = (ImageView) convertView;
@@ -52,5 +59,13 @@ public class ImageAdapter extends BaseAdapter{
                 .into(imageView);
 
         return imageView;
+    }
+
+    public void addMovies(Movie[] movies) {
+        this.movies = movies;
+    }
+
+    public void clear() {
+        Arrays.fill(movies, null);
     }
 }

@@ -32,6 +32,9 @@
         <activity
             android:name=".DetailActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <provider
+            android:authorities="com.example.joseph.popularmovies"
+            android:name=".data.MovieProvider"/>
     </application>
 
 </manifest>
