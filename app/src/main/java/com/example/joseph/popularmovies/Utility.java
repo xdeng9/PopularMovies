@@ -30,4 +30,13 @@ public class Utility {
 
         return YOUTUBE_THUMNAIL_BASE_URL+key+"/1.jpg";
     }
+
+    public static boolean isDouble(String input){
+        try {
+            Double.parseDouble(input);
+            return true;
+        } catch (NumberFormatException e){
+            return false;
+        }
+    }
 }

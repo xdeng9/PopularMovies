@@ -3,6 +3,7 @@ package com.example.joseph.popularmovies;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -34,6 +35,8 @@ public class DetailActivity extends AppCompatActivity {
     LinearLayout reviewLayout;
     Movie mMovie;
     Button favbtn;
+    boolean isFavorite;
+    String btnText = "Remove from favorite";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,23 +50,38 @@ public class DetailActivity extends AppCompatActivity {
 
         trailerLayout = (LinearLayout) findViewById(R.id.trailers_layout);
         reviewLayout = (LinearLayout) findViewById(R.id.reviews_layout);
-
+        favbtn = (Button) findViewById(R.id.fav_btn);
         mId = mMovie.getMovieId();
+
+        Cursor c = getApplicationContext().getContentResolver().query(
+                MovieContract.MovieEntry.buildMovieUri(mId),
+                null,
+                null,
+                null,
+                null
+        );
+
+        if(c.getCount() == 0){
+            isFavorite = false;
+        } else {
+            isFavorite = true;
+            favbtn.setText(btnText);
+        }
+
         ImageView backdrop = (ImageView) findViewById(R.id.backdrop_imageview);
         Picasso.with(mContext).load(mMovie.getBackdrop()).into(backdrop);
         ((TextView) findViewById(R.id.movie_title_textview)).setText(mMovie.getMovieTitle());
         ((TextView) findViewById(R.id.movie_rating_textview)).setText(mMovie.getUserRating());
         ((TextView) findViewById(R.id.movie_release_date_textview)).setText(mMovie.getReleaseDate());
         ((TextView) findViewById(R.id.movie_plot_summary_textview)).setText(mMovie.getPlotSummary());
-        favbtn = (Button) findViewById(R.id.fav_btn);
+
         setTitle(mMovie.getMovieTitle());
         ImageView movieImage = ((ImageView) findViewById(R.id.movie_poster_imageview));
         Picasso.with(mContext).load(mMovie.getImageUrl()).into(movieImage);
-        //listView = (ListView) findViewById(R.id.trailer_listView);
-        //Log.i("Post execute:", "Trailers size = " + mTrailerAdapter.getCount());
-        //listView.setAdapter(mTrailerAdapter);
         getTrailers();
         getReviews();
+
+        c.close();
     }
 
     private void getTrailers() {
@@ -78,8 +96,12 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public void addMovieToFavorite(View v) {
-//        MovieDbHelper dbHelper = new MovieDbHelper(getApplicationContext());
-//        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        if(isFavorite){
+            isFavorite = false;
+            removeMovieFromFavorite();
+            return;
+        }
         ContentValues values = new ContentValues();
         values.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, mMovie.getMovieId());
         values.put(MovieContract.MovieEntry.COLUMN_MOVIE_NAME, mMovie.getMovieTitle());
@@ -88,12 +110,22 @@ public class DetailActivity extends AppCompatActivity {
         values.put(MovieContract.MovieEntry.COLUMN_MOVIE_POSETER_URL, mMovie.getImageUrl());
         values.put(MovieContract.MovieEntry.COLUMN_MOVIE_OVERVIEW, mMovie.getPlotSummary());
         values.put(MovieContract.MovieEntry.COLUMN_MOVIE_HEADER_URL, mMovie.getBackdrop());
-       // db.insert(MovieContract.MovieEntry.TABLE_NAME, null, values);
-       // db.close();
 
+        isFavorite = true;
         getApplicationContext().getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, values);
-        favbtn.setText("Remove from favorite");
+        favbtn.setText(btnText);
         Toast.makeText(getApplicationContext(), "Movie added to favorite!", Toast.LENGTH_SHORT).show();
+    }
+
+    public void removeMovieFromFavorite(){
+
+        getApplicationContext().getContentResolver().delete(
+                MovieContract.MovieEntry.buildMovieUri(mId),
+                null,
+                null
+        );
+        favbtn.setText("Add to favorite");
+        Toast.makeText(getApplicationContext(), "Movie removed from favorite.", Toast.LENGTH_SHORT).show();
     }
 
 }

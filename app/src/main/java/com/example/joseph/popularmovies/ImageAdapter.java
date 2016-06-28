@@ -65,7 +65,4 @@ public class ImageAdapter extends BaseAdapter {
         this.movies = movies;
     }
 
-    public void clear() {
-        Arrays.fill(movies, null);
-    }
 }

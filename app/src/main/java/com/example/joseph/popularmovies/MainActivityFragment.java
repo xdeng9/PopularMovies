@@ -33,9 +33,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class MainActivityFragment extends Fragment {
 
     GridView gridView;
@@ -92,17 +89,20 @@ public class MainActivityFragment extends Fragment {
     }
 
     private void getFavoriteMovies() {
-        MovieDbHelper dbHelper = new MovieDbHelper(getContext());
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        Cursor c = db.query(
-                MovieContract.MovieEntry.TABLE_NAME,
-                null,
-                null,
+
+        Cursor c = getContext().getContentResolver().query(
+                MovieContract.MovieEntry.CONTENT_URI,
                 null,
                 null,
                 null,
                 null
         );
+
+        if (c.getCount()==0) {
+            Toast.makeText(getContext(), "No favorite movies found.", Toast.LENGTH_LONG).show();
+            gridView.setAdapter(mImageAdapter);
+            return;
+        }
         Movie[] favmovies = new Movie[c.getCount()];
         Movie movieInfo;
         int movieId;
@@ -130,14 +130,8 @@ public class MainActivityFragment extends Fragment {
         }
 
         c.close();
-        db.close();
-
-//        for(Movie m: favmovies){
-//            Log.v("imageUrl=", m.getImageUrl());
-//        }
 
         mImageAdapter.addMovies(favmovies);
-        //mImageAdapter.notifyDataSetChanged();
         gridView.setAdapter(mImageAdapter);
 
     }

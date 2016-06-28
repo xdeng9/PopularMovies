@@ -45,7 +45,12 @@ public class Movie implements Parcelable{
 
     public String getUserRating(){
 
-        return roundUserRating(userRating)+"/10";
+        if (Utility.isDouble(userRating)){
+            return roundUserRating(userRating)+"/10";
+        } else {
+            return userRating;
+        }
+
     }
 
     public String getReleaseDate(){
