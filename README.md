@@ -6,7 +6,7 @@ Created with the help of Udacity course, Developing Android Apps: Android Fundam
 Note:
 
 An API key from https://www.themoviedb.org is required. 
-Please change String api_key = "" in MainActivityFragment.java to your API key before running this app.
+Please change API key in build.gradle before running this app.
 
 
 Code source used:
