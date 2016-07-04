@@ -45,7 +45,6 @@ public class FetchMovieTrailerTask extends AsyncTask<Integer, Void, Trailer[]> {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
-        //This string will contain the raw Json data
         String trailerJsonStr = null;
         mId = params[0];
 

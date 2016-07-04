@@ -58,6 +58,9 @@ public class ImageAdapter extends BaseAdapter {
                 .load(movies[position].getImageUrl())
                 .into(imageView);
 
+        imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        imageView.setAdjustViewBounds(true);
+
         return imageView;
     }
 

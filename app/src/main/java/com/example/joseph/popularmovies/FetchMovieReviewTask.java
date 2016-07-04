@@ -130,11 +130,10 @@ public class FetchMovieReviewTask extends AsyncTask<Integer, Void, Review[]> {
     protected void onPostExecute(Review[] result) {
 
         if (result != null) {
-           // mTrailerAdapter = new TrailerAdapter(mContext, result);
             for (int i = 0; i < result.length; i++) {
-           //     mTrailerLayout.addView(mTrailerAdapter.getView(i,null,null));
                 TextView tv = new TextView(mContext);
                 tv.setText(result[i].getAuthor()+"\n"+result[i].getReview()+"\n\n");
+                tv.setPadding(12,0,12,0);
                 mReviewLayout.addView(tv);
             }
         }

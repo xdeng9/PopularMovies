@@ -3,7 +3,6 @@ package com.example.joseph.popularmovies;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -15,12 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.joseph.popularmovies.data.MovieContract;
-import com.example.joseph.popularmovies.data.MovieDbHelper;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,10 +35,15 @@ public class MainActivityFragment extends Fragment {
     ImageAdapter mImageAdapter;
     final String MOVIE_PARCEL_KEY = "movie";
     Movie[] movies;
+    boolean mIsTwoPane = false;
+
+    public interface Callback {
+
+        public void onItemSelected(Movie movie);
+    }
 
     public MainActivityFragment() {
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,15 +58,8 @@ public class MainActivityFragment extends Fragment {
         gridView = (GridView) rootView.findViewById(R.id.gridview);
         mImageAdapter = new ImageAdapter(getActivity());
         gridView.setAdapter(mImageAdapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Movie movieItem = (Movie) mImageAdapter.getItem(position);
-                Intent intent = new Intent(getActivity(), DetailActivity.class);
-                intent.putExtra(MOVIE_PARCEL_KEY, movieItem);
-                startActivity(intent);
-            }
-        });
+        gridView.setOnItemClickListener(new GridViewOnClickListener());
+
         return rootView;
     }
 
@@ -75,20 +69,46 @@ public class MainActivityFragment extends Fragment {
         updateMovie();
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mIsTwoPane = ((MainActivity) getActivity()).checkTwoPane();
+    }
+
+    private class GridViewOnClickListener implements AdapterView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+
+            Movie movieItem = (Movie) mImageAdapter.getItem(position);
+
+                if (mIsTwoPane) {
+                    ((Callback) getActivity()).onItemSelected(movieItem);
+
+                } else {
+                    Intent intent = new Intent(getActivity(), DetailActivity.class);
+                    intent.putExtra(MOVIE_PARCEL_KEY, movieItem);
+                    startActivity(intent);
+                }
+            }
+    }
+
     private void updateMovie() {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String sort = pref.getString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_default));
+        FetchMovieTask movieTask = new FetchMovieTask();
 
-        if(sort.equals("favorite")){
-            getFavoriteMovies();
-        } else{
-            FetchMovieTask movieTask = new FetchMovieTask();
+        if (sort.equals("favorite")) {
+            if(0==getFavoriteMovies()){
+                Toast.makeText(getContext(), "No favorite movies found.", Toast.LENGTH_LONG).show();
+                movieTask.execute();
+            }
+        } else {
             movieTask.execute();
         }
 
     }
 
-    private void getFavoriteMovies() {
+    private int getFavoriteMovies() {
 
         Cursor c = getContext().getContentResolver().query(
                 MovieContract.MovieEntry.CONTENT_URI,
@@ -98,10 +118,8 @@ public class MainActivityFragment extends Fragment {
                 null
         );
 
-        if (c.getCount()==0) {
-            Toast.makeText(getContext(), "No favorite movies found.", Toast.LENGTH_LONG).show();
-            gridView.setAdapter(mImageAdapter);
-            return;
+        if (c.getCount() == 0) {
+            return 0;
         }
         Movie[] favmovies = new Movie[c.getCount()];
         Movie movieInfo;
@@ -134,6 +152,7 @@ public class MainActivityFragment extends Fragment {
         mImageAdapter.addMovies(favmovies);
         gridView.setAdapter(mImageAdapter);
 
+        return gridView.getCount();
     }
 
     public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
