@@ -19,7 +19,7 @@ android {
     }
 
     buildTypes.each {
-        it.buildConfigField 'String', 'API_KEY', '"651b1c41da70293dcec9902d43fc47dc"'
+        it.buildConfigField 'String', 'API_KEY', '"your API key"'
     }
 }
 
