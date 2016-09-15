@@ -7,6 +7,7 @@ Created with the help of Udacity course, Developing Android Apps: Android Fundam
 - Read movie reviews and watch trailers.
 - Add movies to your favorite list.
 - Sort movies based on popularity, rating or favorites.
+- Support both phone and tablet layouts.
 
 ## Note:
 
