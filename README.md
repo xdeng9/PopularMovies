@@ -1,6 +1,8 @@
 # Popular Movies
 
-Created with the help of Udacity course, Developing Android Apps: Android Fundamentals.
+<img src="https://github.com/xdeng9/PopularMovies/blob/master/Screenshots/device-2016-09-30-151728.png" width="300"/>
+<img src="https://github.com/xdeng9/PopularMovies/blob/master/Screenshots/device-2016-09-30-151933.png" width="300"/>
+<img src="https://github.com/xdeng9/PopularMovies/blob/master/Screenshots/Screenshot_2016-09-30-15-04-27.png" width="300"/>
 
 ## Features:
 - Get information on the latest movies.
@@ -10,10 +12,10 @@ Created with the help of Udacity course, Developing Android Apps: Android Fundam
 - Support both phone and tablet layouts.
 
 ## Note:
+Created with the help of Udacity course, Developing Android Apps: Android Fundamentals.
 
 An API key from https://www.themoviedb.org is required. 
 Please change API key in build.gradle before running this app.
-
 
 Code source used:
 
