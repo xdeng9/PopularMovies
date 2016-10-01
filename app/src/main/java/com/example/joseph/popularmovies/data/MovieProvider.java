@@ -9,7 +9,7 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 
 /**
- * Created by administrator on 6/26/16.
+ * Content provider for Movie database
  */
 public class MovieProvider extends ContentProvider {
 
