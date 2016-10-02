@@ -23,7 +23,7 @@ import java.net.URL;
 import java.util.List;
 
 /**
- * AsynTask that fetches movie trail information.
+ * AsynTask that fetches movie trailer information.
  */
 public class FetchMovieTrailerTask extends AsyncTask<Integer, Void, Trailer[]> {
 
