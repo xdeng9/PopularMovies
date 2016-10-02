@@ -12,7 +12,7 @@ import com.squareup.picasso.Picasso;
 import java.util.Arrays;
 
 /**
- * Created by administrator on 5/9/16.
+ * Image adapter for grid layout.
  */
 public class ImageAdapter extends BaseAdapter {
 
