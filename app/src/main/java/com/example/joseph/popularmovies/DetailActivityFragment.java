@@ -19,7 +19,7 @@ import com.example.joseph.popularmovies.data.MovieContract;
 import com.squareup.picasso.Picasso;
 
 /**
- * Created by administrator on 6/27/16.
+ * Detail fragment that shows movie detail information such as reviews, trailers, and release date, etc.
  */
 public class DetailActivityFragment extends Fragment {
 
