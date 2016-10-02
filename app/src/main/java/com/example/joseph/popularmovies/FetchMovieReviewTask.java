@@ -19,7 +19,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by administrator on 6/21/16.
+ * AsyncTask that fetches movie reviews.
  */
 public class FetchMovieReviewTask extends AsyncTask<Integer, Void, Review[]> {
 
