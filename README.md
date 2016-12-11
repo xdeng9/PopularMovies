@@ -1,6 +1,6 @@
 # Popular Movies
 
- Project #1 & #2 for Udacity Android Developer Nanodegree
+ Project #1 & 2 for Udacity Android Developer Nanodegree
 
 <img src="https://github.com/xdeng9/PopularMovies/blob/master/Screenshots/device-2016-09-30-151728.png" width="300"/>
 <img src="https://github.com/xdeng9/PopularMovies/blob/master/Screenshots/device-2016-09-30-151933.png" width="300"/>
