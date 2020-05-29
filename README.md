@@ -11,7 +11,6 @@ An Android app that let users view a list of new and popular movies.
 - Support both phone and tablet layouts.
 
 ## Note:
-Created with the help of Udacity course, Developing Android Apps: Android Fundamentals.
 
 An API key from https://www.themoviedb.org is required. 
 Please change API key in build.gradle before running this app.
